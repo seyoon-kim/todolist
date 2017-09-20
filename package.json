@@ -22,5 +22,8 @@
   "directories": {
     "example": "example",
     "test": "test"
+  },
+  "dependencies": {
+    "tui-code-snippet": "^1.2.8"
   }
 }
