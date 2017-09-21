@@ -4,17 +4,20 @@ var data = [
   {
     id : 'todo0',
     title : '제목01',
-    isCheck : false
+    isChecked : false,
+    regDate : 1000
   },
   {
     id : 'todo1',
     title : '제목02',
-    isCheck : true
+    isChecked : true,
+    regDate : 2000
   },
   {
     id : 'todo2',
     title : '제목03',
-    isCheck : false
+    isChecked : false,
+    regDate : 3000
   }
 ];
 todoList.init(data);
