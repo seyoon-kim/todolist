@@ -137,4 +137,17 @@ describe('todoList infoArea', function() {
         var eleLeftItemsNum = Domutil.querySelector('#leftItemsNum')[0];
         expect(eleLeftItemsNum.innerText).toEqual('2');
     });
+
+    //현재 완료된 Todo의 갯수가 몇개인지 보여주고 버튼을 클릭하면 완료된 todo를 삭제하는 버튼
+    it ('현재 완료된 Todo의 갯수가 몇개인지 보여주는 버튼', function() {
+        var eleCompleteItemsNum = Domutil.querySelector('#completeItemsNum')[0];
+        expect(eleCompleteItemsNum.innerText).toEqual('1');
+    });
+
+    it ('현재 완료된 Todo의 갯수가 몇개인지 보여주는 버튼을 누르면 completeList에 있는 모든 li를 삭제한다.', function() {
+        var eleCompleteList = Domutil.querySelector('.completeList')[0];
+        todoList._removeComplteList();
+        expect(eleCompleteList.children.length).toEqual(0);
+    });
+
 });

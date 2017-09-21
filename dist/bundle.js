@@ -407,6 +407,9 @@ module.exports = todoList = (function() {
     var _renderInfoList = function() {
         var eleLeftItemsNum = Domutil.querySelector("#leftItemsNum")[0];
         eleLeftItemsNum.innerText = incompleteTodoObject.length;
+
+        var eleCompleteItemsNum = Domutil.querySelector("#completeItemsNum")[0];
+        eleCompleteItemsNum.innerText = completeTodoObject.length;
     }
 
     var _addArrTodoObject = function(target){
@@ -451,6 +454,17 @@ module.exports = todoList = (function() {
         }
     }
 
+    var _removeComplteList = function() {
+        if (completeTodoObject.length === 0) {
+            return;
+        }
+        completeTodoObject = [];
+        arrTodoObject = snippet.filter(arrTodoObject, function(value) {
+            return (value.isChecked === false);
+        });
+        _renderView();
+    }
+
     var _addEventClick = function(e) {
         var target;
         var eleTodo;
@@ -462,6 +476,10 @@ module.exports = todoList = (function() {
         if (target.type === 'checkbox' && Domclass.hasClass(eleTodo, 'todo')) {
             var idTodo = eleTodo.getAttribute('data-id');
             _toggleTodo(idTodo, target.checked);
+        }
+
+        if (target.id === 'btnDelCompleteList') {
+            _removeComplteList();
         }
     }
 
@@ -485,7 +503,7 @@ module.exports = todoList = (function() {
     return {
         init : init,
 
-
+        _removeComplteList : _removeComplteList,
         _toggleTodo : _toggleTodo,
         _addArrTodoObject : _addArrTodoObject,
         getArrTodoObject : getArrTodoObject
