@@ -1,4 +1,4 @@
-describe('todoList', function() {
+describe('todoList listArea', function() {
     var data = [
       {
         id : 'todo0',
@@ -21,7 +21,7 @@ describe('todoList', function() {
     ];
 
     beforeEach(function() {
-        document.body.innerHTML = '<div class="todoListWrap"><div class="listArea"><ul class="incompleteList"></ul><ul class="completeList"></ul></div></div>';
+        document.body.innerHTML = '<div class="todoListWrap"><div class="inputArea"><input type="text" class="inputTxt"/></div><div class="listArea"><ul class="incompleteList"></ul><ul class="completeList"></ul></div></div><div class="infoArea"><p class="leftItems"> <span id="leftItemsNum"></span> items left </p><div class="filterArea"><button type="button" name="button">All</button><button type="button" name="button">Active</button><button type="button" name="button">Completed</button></div><button type="button" name="button"><span id="completeItemsNum"></span> Clear completed</button></div>';
         todoList.init(data);
     });
 
@@ -81,13 +81,14 @@ describe('todoList inputArea', function() {
             regDate : 3000
           }
         ];
-        document.body.innerHTML = '<div class="todoListWrap"><div class="inputArea"><input type="text" class="inputTxt" value="test text"/></div><div class="listArea"><ul class="incompleteList"></ul><ul class="completeList"></ul></div></div>';
+        document.body.innerHTML = '<div class="todoListWrap"><div class="inputArea"><input type="text" class="inputTxt"/></div><div class="listArea"><ul class="incompleteList"></ul><ul class="completeList"></ul></div></div><div class="infoArea"><p class="leftItems"> <span id="leftItemsNum"></span> items left </p><div class="filterArea"><button type="button" name="button">All</button><button type="button" name="button">Active</button><button type="button" name="button">Completed</button></div><button type="button" name="button"><span id="completeItemsNum"></span> Clear completed</button></div>';
         todoList.init(data);
     });
 
     it ('inputTxt의 value값이 제대로 저장되었는지확인', function() {
         var eleInputTxt = Domutil.querySelector('.inputTxt')[0];
         var arrTodoObject;
+        eleInputTxt.value = 'test text';
         todoList._addArrTodoObject(eleInputTxt);
         arrTodoObject = todoList.getArrTodoObject();
         expect(arrTodoObject[arrTodoObject.length-1].title).toEqual("test text");
@@ -97,8 +98,43 @@ describe('todoList inputArea', function() {
         var eleInputTxt = Domutil.querySelector('.inputTxt')[0];
         var arrTodoObject;
         var firstEle;
+        eleInputTxt.value = 'test text';
         todoList._addArrTodoObject(eleInputTxt);
         firstEle = Domutil.querySelector('.incompleteList')[0].firstChild;
         expect(firstEle.getAttribute('data-id')).toEqual('todo3');
+    });
+});
+
+
+describe('todoList infoArea', function() {
+    var data = [
+      {
+        id : 'todo0',
+        title : '제목01',
+        isChecked : false,
+        regDate : 1000
+      },
+      {
+        id : 'todo1',
+        title : '제목02',
+        isChecked : true,
+        regDate : 2000
+      },
+      {
+        id : 'todo2',
+        title : '제목03',
+        isChecked : false,
+        regDate : 3000
+      }
+    ];
+
+    beforeEach(function() {
+        document.body.innerHTML = '<div class="todoListWrap"><div class="inputArea"><input type="text" class="inputTxt"/></div><div class="listArea"><ul class="incompleteList"></ul><ul class="completeList"></ul></div></div><div class="infoArea"><p class="leftItems"> <span id="leftItemsNum"></span> items left </p><div class="filterArea"><button type="button" name="button">All</button><button type="button" name="button">Active</button><button type="button" name="button">Completed</button></div><button type="button" name="button"><span id="completeItemsNum"></span> Clear completed</button></div>';
+        todoList.init(data);
+    });
+
+    it ('현재 남아있는 완료 전 Todo의 갯수를 출력한다', function() {
+        var eleLeftItemsNum = Domutil.querySelector('#leftItemsNum')[0];
+        expect(eleLeftItemsNum.innerText).toEqual('2');
     });
 });

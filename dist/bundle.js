@@ -360,6 +360,7 @@ module.exports = todoList = (function() {
 
     var _renderView = function() {
         _renderTodoList();
+        _renderInfoList();
     }
 
     var _renderTodoList = function() {
@@ -403,9 +404,10 @@ module.exports = todoList = (function() {
         eleIncompleteList.innerHTML = eleHtml;
     }
 
-    // var _renderBottomInfo = function() {
-    //
-    // }
+    var _renderInfoList = function() {
+        var eleLeftItemsNum = Domutil.querySelector("#leftItemsNum")[0];
+        eleLeftItemsNum.innerText = incompleteTodoObject.length;
+    }
 
     var _addArrTodoObject = function(target){
         todoTitle = target.value;
