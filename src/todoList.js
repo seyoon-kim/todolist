@@ -88,15 +88,14 @@ module.exports = todoList = (function() {
         eleCompleteItemsNum.innerText = completeTodoObject.length;
     }
 
-    var _addArrTodoObject = function(target){
-        todoTitle = target.value;
-        arrTodoObject.push({
-          id : 'todo' + (arrTodoObject.length),
-          title : target.value,
-          isChecked : false,
-          regDate : snippet.timestamp()
-        });
-
+    var _addTodoObject = function(target){
+        var objTodo = {
+            id : 'todo' + snippet.stamp({}),
+            title : target.value,
+            isChecked : false,
+            regDate : snippet.timestamp()
+        }
+        arrTodoObject.push(objTodo);
         target.value = '';
 
         _loadTodoData(arrTodoObject);
@@ -113,7 +112,7 @@ module.exports = todoList = (function() {
         }
         // todoInputTxt enter 키를 입력한 경우
         if (key === 13 && targetId === 'todoInputTxt') {
-            _addArrTodoObject(target);
+            _addTodoObject(target);
         }
     }
 
@@ -141,21 +140,55 @@ module.exports = todoList = (function() {
         _renderView();
     }
 
+    var _removeClassHideOfList = function() {
+        var eleCompleteList = Domutil.querySelector('.completeList')[0];
+        var eleIncompleteList = Domutil.querySelector('.incompleteList')[0];
+        Domclass.removeClass(eleCompleteList, 'hide');
+        Domclass.removeClass(eleIncompleteList, 'hide');
+    }
+
+    var _clickFilterBtn = function(target) {
+        if (target.id === 'btnAllList'){
+            _removeClassHideOfList();
+        }
+
+        if (target.id === 'btnActiveList'){
+            _removeClassHideOfList();
+
+            eleCompleteList = Domutil.querySelector('.completeList')[0];
+            Domclass.addClass(eleCompleteList, 'hide');
+        }
+
+        if (target.id === 'btnCompleteList'){
+            _removeClassHideOfList();
+
+            eleIncompleteList = Domutil.querySelector('.incompleteList')[0];
+            Domclass.addClass(eleIncompleteList, 'hide');
+        }
+    }
+
     var _addEventClick = function(e) {
         var target;
         var eleTodo;
+        var idTodo
+        var eleCompleteList;
+        var eleIncompleteList;
         e = e || window.event;
         target = e.target || e.srcElement;
         eleTodo = target.parentElement;
 
         // todo 안에 checkbox를 클릭한 경우
         if (target.type === 'checkbox' && Domclass.hasClass(eleTodo, 'todo')) {
-            var idTodo = eleTodo.getAttribute('data-id');
+            idTodo = eleTodo.getAttribute('data-id');
             _toggleTodo(idTodo, target.checked);
         }
 
         if (target.id === 'btnDelCompleteList') {
             _removeComplteList();
+        }
+
+        if (target.id === 'btnAllList' || target.id === 'btnActiveList' || target.id === 'btnCompleteList') {
+            _clickFilterBtn(target);
         }
     }
 
@@ -179,10 +212,10 @@ module.exports = todoList = (function() {
     return {
         init : init,
 
+        _clickFilterBtn : _clickFilterBtn,
         _removeComplteList : _removeComplteList,
         _toggleTodo : _toggleTodo,
-        _addArrTodoObject : _addArrTodoObject,
+        _addTodoObject : _addTodoObject,
         getArrTodoObject : getArrTodoObject
-
     }
 })();

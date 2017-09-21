@@ -181,7 +181,7 @@ module.exports = Domclass = (function() {
 
     var removeClass = function(el, className) {
         var reg = new RegExp('(\\s|^)' + className + '(\\s|$)');
-        el.className = el.className.replace(reg, ' ');
+        el.className = el.className.replace(reg, '');
     };
 
     return {
