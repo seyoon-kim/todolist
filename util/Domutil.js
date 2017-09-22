@@ -1,5 +1,4 @@
-
-module.exports = Domutil = (function() {
+module.exports = (function() {
     var _toArray = function(likeArray) {
         var result = [];
         var i = 0;
@@ -163,56 +162,5 @@ module.exports = Domutil = (function() {
     return {
         querySelector: querySelector,
         querySelectorAll: querySelectorAll
-    };
-})();
-
-module.exports = Domclass = (function() {
-    var hasClass = function(el, className) {
-        var result = el.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'));
-
-        return !!result;
-    };
-
-    var addClass = function(el, className) {
-        el.className += ' ' + className;
-    };
-
-    var removeClass = function(el, className) {
-        var reg = new RegExp('(\\s|^)' + className + '(\\s|$)');
-        el.className = el.className.replace(reg, '');
-    };
-
-    return {
-        hasClass: hasClass,
-        addClass: addClass,
-        removeClass: removeClass
-    };
-})();
-
-// JavaScript for Web Developers 참고
-module.exports = Eventutil = (function() {
-    var addHandler = function(element, type, handler) {
-        if (element.addEventListener) {
-            element.addEventListener(type, handler, false);
-        } else if (element.attachEvent) {
-            element.attachEvent('on' + type, handler);
-        } else {
-            element['on' + type] = handler;
-        }
-    };
-
-    var removeHandler = function(element, type, handler) {
-        if (element.removeEventListener) {
-            element.removeEventListener(type, handler, false);
-        } else if (element.detachEvent) {
-            element.detachEvent('on' + type, handler);
-        } else {
-            element['on' + type] = null;
-        }
-    };
-
-    return {
-        addHandler: addHandler,
-        removeHandler: removeHandler
     };
 })();

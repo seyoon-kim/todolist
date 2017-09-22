@@ -1,10 +1,29 @@
-var util = require('./util');
+var Domclass = require('../util/Domclass');
+var Eventutil = require('../util/Eventutil');
 var snippet = require('tui-code-snippet');
 
-module.exports = todoList = (function() {
+//함수 표현식 -> 함수 선언문으로 바꾸기 eslint에서 jsdoc검사때문에
+
+module.exports = (function() {
     var todoObjects = []; // 모든 todoData
     var completeTodoObjects = []; // isChecked가 true인 값
     var incompleteTodoObjects = []; // isChecked가 false인 값
+
+    var TODO_LIST_WRAP_ELEMENT;
+    var COMPLETE_LIST_ELEMENT;
+    var INCOMPLETE_LIST_ELEMENT;
+    var LEFT_ITEM_NUM_ELEMENT;
+    var COMPLETE_ITEMS_NUM_ELEMENT;
+    var KEY_ENTER;
+
+    var _initConstant = function() {
+        TODO_LIST_WRAP_ELEMENT = document.getElementById('todoListWrap');
+        COMPLETE_LIST_ELEMENT = document.getElementById('completeList');
+        INCOMPLETE_LIST_ELEMENT = document.getElementById('incompleteList');
+        LEFT_ITEM_NUM_ELEMENT = document.getElementById('leftItemsNum');
+        COMPLETE_ITEMS_NUM_ELEMENT = document.getElementById('completeItemsNum');
+        KEY_ENTER = 13;
+    };
 
     var _forEach = function(arr, func) {
         var i = 0;
@@ -31,20 +50,21 @@ module.exports = todoList = (function() {
     };
 
     /**
-     * 인자로 받은 데이터 정보를 todoObjects에 담고, isChecked = false인것은 incompleteTodoObjects, isChecked = true인것은 completeTodoObjects 배열에 담은 뒤 오름차순 정렬
+     * 인자로 받은 데이터 정보를 todoObjects에 담고, isChecked = false인것은 incompleteTodoObjects,
+     * isChecked = true인것은 completeTodoObjects 배열에 담은 뒤 오름차순 정렬
      * @param {array} todoData 는 todo 데이터 정보
      */
     var _loadTodoData = function(todoData) {
         todoObjects = todoData;
 
         completeTodoObjects = snippet.filter(todoObjects, function(value) {
-            return (value.isChecked === true);
+            return value.isChecked;
         });
 
         _sortRegDateOfTodoObject(completeTodoObjects);
 
         incompleteTodoObjects = snippet.filter(todoObjects, function(value) {
-            return (value.isChecked === false);
+            return !value.isChecked;
         });
 
         _sortRegDateOfTodoObject(incompleteTodoObjects);
@@ -52,30 +72,28 @@ module.exports = todoList = (function() {
 
     var _renderCompleteTodoList = function() {
         var htmlLi = '';
-        var todoId, todoTitle, eleCompleteList;
+        var todoId, todoTitle;
 
         _forEach(completeTodoObjects, function(index, value) {
-            todoId = completeTodoObjects[index].id;
-            todoTitle = completeTodoObjects[index].title;
+            todoId = value.id;
+            todoTitle = value.title;
             htmlLi += '<li class="todo" data-id="' + todoId + '"><input type="checkbox" class="todoChk" checked/><p class="todoTitle">' + todoTitle + '</p></li>';
         });
 
-        eleCompleteList = document.getElementById('completeList');
-        eleCompleteList.innerHTML = htmlLi;
+        COMPLETE_LIST_ELEMENT.innerHTML = htmlLi;
     };
 
     var _renderIncompleteTodoList = function() {
         var htmlLi = '';
-        var todoId, todoTitle, eleIncompleteList;
+        var todoId, todoTitle;
 
         _forEach(incompleteTodoObjects, function(index, value) {
-            todoId = incompleteTodoObjects[index].id;
-            todoTitle = incompleteTodoObjects[index].title;
+            todoId = value.id;
+            todoTitle = value.title;
             htmlLi += '<li class="todo" data-id="' + todoId + '"><input type="checkbox" class="todoChk"/><p class="todoTitle">' + todoTitle + '</p></li>';
         });
 
-        eleIncompleteList = document.getElementById('incompleteList');
-        eleIncompleteList.innerHTML = htmlLi;
+        INCOMPLETE_LIST_ELEMENT.innerHTML = htmlLi;
     };
 
     var _renderTodoList = function() {
@@ -84,10 +102,8 @@ module.exports = todoList = (function() {
     };
 
     var _renderInfoList = function() {
-        var eleLeftItemsNum = document.getElementById('leftItemsNum');
-        var eleCompleteItemsNum = document.getElementById('completeItemsNum');
-        eleLeftItemsNum.innerText = incompleteTodoObjects.length;
-        eleCompleteItemsNum.innerText = completeTodoObjects.length;
+        LEFT_ITEM_NUM_ELEMENT.innerText = incompleteTodoObjects.length;
+        COMPLETE_ITEMS_NUM_ELEMENT.innerText = completeTodoObjects.length;
     };
 
     var _renderView = function() {
@@ -113,18 +129,18 @@ module.exports = todoList = (function() {
         _renderView();
     };
 
-    var _bindEventKeypress = function(e) {
+    var _keypressEvent = function(e) {
         var target, key, targetId;
         e = e || window.event;
         target = e.target || e.srcElement;
         key = e.keyCode;
         targetId = target.getAttribute('id');
 
-        if (target.value.length === 0) {
+        if (!target.value) {
             return;
         }
 
-        if (key === 13 && targetId === 'todoInputTxt') {
+        if (key === KEY_ENTER && targetId === 'todoInputTxt') {
             _addTodoObject(target);
         }
     };
@@ -136,13 +152,12 @@ module.exports = todoList = (function() {
      */
     var _toggleTodo = function(idTodo, isCheckedTarget) {
         _forEach(todoObjects, function(index, value) {
-            if (todoObjects[index].id === idTodo) {
-                todoObjects[index].isChecked = (!!isCheckedTarget);
-                _loadTodoData(todoObjects);
-                _renderView();
-                return;
+            if (value.id === idTodo) {
+                value.isChecked = (!!isCheckedTarget);
             }
         });
+        _loadTodoData(todoObjects);
+        _renderView();
     };
 
     /**
@@ -160,10 +175,8 @@ module.exports = todoList = (function() {
     };
 
     var _removeClassHideOfList = function() {
-        var eleCompleteList = document.getElementById('completeList');
-        var eleIncompleteList = document.getElementById('incompleteList');
-        Domclass.removeClass(eleCompleteList, 'hide');
-        Domclass.removeClass(eleIncompleteList, 'hide');
+        Domclass.removeClass(COMPLETE_LIST_ELEMENT, 'hide');
+        Domclass.removeClass(INCOMPLETE_LIST_ELEMENT, 'hide');
     };
 
     /**
@@ -171,30 +184,26 @@ module.exports = todoList = (function() {
      * @param {object} target 는 filter Button 객체 중 하나
      */
     var _clickFilterBtn = function(target) {
-        var eleCompleteList, eleIncompleteList;
-
         if (target.id === 'btnAllList') {
             _removeClassHideOfList();
         } else if (target.id === 'btnActiveList') {
             _removeClassHideOfList();
-            eleCompleteList = document.getElementById('completeList');
-            Domclass.addClass(eleCompleteList, 'hide');
+            Domclass.addClass(COMPLETE_LIST_ELEMENT, 'hide');
         } else if (target.id === 'btnCompleteList') {
             _removeClassHideOfList();
-            eleIncompleteList = document.getElementById('incompleteList');
-            Domclass.addClass(eleIncompleteList, 'hide');
+            Domclass.addClass(INCOMPLETE_LIST_ELEMENT, 'hide');
         }
     };
 
-    var _bindEventClick = function(e) {
-        var target, eleTodo, idTodo;
-        e = e || window.event;
-        target = e.target || e.srcElement;
-        eleTodo = target.parentElement;
+    var _clickEvent = function(event) {
+        var event = event || window.event;
+        var target = event.target || event.srcElement;
+        var todoElement = target.parentElement;
+        var todoId;
 
-        if (target.type === 'checkbox' && Domclass.hasClass(eleTodo, 'todo')) {
-            idTodo = eleTodo.getAttribute('data-id');
-            _toggleTodo(idTodo, target.checked);
+        if (target.type === 'checkbox' && Domclass.hasClass(todoElement, 'todo')) {
+            todoId = todoElement.getAttribute('data-id');
+            _toggleTodo(todoId, target.checked);
         } else if (target.id === 'btnDelCompleteList') {
             _removeComplteList();
         } else if (target.id === 'btnAllList' || target.id === 'btnActiveList' || target.id === 'btnCompleteList') {
@@ -203,20 +212,23 @@ module.exports = todoList = (function() {
     };
 
     var _bindEvent = function() {
-        var eleTodoListWrap = document.getElementById('todoListWrap');
-        Eventutil.addHandler(eleTodoListWrap, 'keypress', _bindEventKeypress);
-        Eventutil.addHandler(eleTodoListWrap, 'click', _bindEventClick);
+        Eventutil.addHandler(TODO_LIST_WRAP_ELEMENT, 'keypress', _keypressEvent);
+        Eventutil.addHandler(TODO_LIST_WRAP_ELEMENT, 'click', _clickEvent);
     };
 
     var init = function(todoData) {
+        _initConstant();
         _loadTodoData(todoData);
         _renderView();
         _bindEvent();
     };
 
-    var getTodoObjects = function() {
+    /**
+     * @returns {Object}
+     */
+    function getTodoObjects() {
         return todoObjects;
-    };
+    }
 
     return {
         init: init,
