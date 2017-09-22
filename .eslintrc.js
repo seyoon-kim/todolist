@@ -11,7 +11,5 @@ module.exports = {
     "globals": {
         "tui": true,
         "fixture": true
-    },
-    "rules": {
     }
 };

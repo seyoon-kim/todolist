@@ -1,8 +1,97 @@
-html, body, div, p, ul, li {
+html, body, div, p, ul, li, span, button, input {
   margin: 0;
   padding: 0;
+  color:#999;
+  line-height: 24px;
+  font-size:16px;
 }
 
+ul{
+  list-style: none;
+}
+
+button{
+  cursor: pointer;
+  padding:5px;
+  font-size:12px;
+  border: 1px solid #d3d3d3;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+button span{
+  font-size:12px;
+}
+
+h1{
+  text-align: center;
+  margin-top:30px;
+}
+
+.todoListWrap{
+  width:450px;
+  margin:50px auto 0 auto;
+  padding:10px;
+  border:1px solid #d9d9d9;
+}
+
+.todoListWrap .inputArea{
+  padding:10px;
+}
+
+.todoListWrap .inputTxt{
+  width:100%;
+  padding:5px 0;
+  border:none;
+}
+
+.todoListWrap .listArea{
+  overflow-y: auto;
+  height:300px;
+  padding:10px;
+  border: 1px solid #d9d9d9;
+}
+
+.todoListWrap .listArea ul li{
+  position:relative;
+  padding:10px 0;
+  border-bottom: 1px solid #d9d9d9;
+}
+
+.todoListWrap .listArea ul li .todoChk{
+  position:absolute;
+  top:12px;
+}
+
+.todoListWrap .listArea ul li .todoTitle{
+  padding-left:30px;
+}
+
+.todoListWrap .listArea ul.completeList li .todoTitle{
+  text-decoration: line-through;
+  color:#000;
+}
+
+.todoListWrap .infoArea{
+  position: relative;
+  padding:15px 0 5px 0;
+}
+
+.todoListWrap .infoArea .leftItems{
+  position: absolute;
+  top:23px;
+  left:0px;
+}
+
+.todoListWrap .infoArea .filterArea{
+  text-align: center;
+}
+
+.todoListWrap .infoArea #btnDelCompleteList{
+  position: absolute;
+  top:15px;
+  right:0px;
+}
 
 .completeList.hide{
   display: none;

@@ -1,6 +1,5 @@
 
 module.exports = Domutil = (function() {
-
     var _toArray = function(likeArray) {
         var result = [];
         var i = 0;
@@ -120,7 +119,6 @@ module.exports = Domutil = (function() {
             fromLength = from.length;
             for (; numFrom < fromLength; numFrom += 1) {
                 founded = founded.concat(_findElementsOfMatchingSelector(from[numFrom], arrSeletor[numArrSelector]));
-                //console.log(founded)
             }
 
             from = founded;
@@ -139,9 +137,9 @@ module.exports = Domutil = (function() {
         from = _makeArrayMatchingToSelctor(selectors);
 
         if (from.length < 1) {
-            result = [];
+            result = null;
         } else {
-            result.push(from[0]);
+            result = from[0];
         }
 
         return result;

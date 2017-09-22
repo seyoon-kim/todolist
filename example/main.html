@@ -2,20 +2,22 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>tooltip</title>
+    <title>TodoList</title>
     <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
 
-    <div class="todoListWrap">
+    <h1>TodoList 구현</h1>
+    <div class="todoListWrap" id="todoListWrap">
+
       <div class="inputArea">
-        <input type="text" class="inputTxt" id="todoInputTxt"/>
+        <input type="text" class="inputTxt" id="todoInputTxt" placeholder="할일을 입력하세요."/>
       </div>
 
       <div class="listArea">
-        <ul class="incompleteList">
+        <ul class="incompleteList" id="incompleteList">
         </ul>
-        <ul class="completeList">
+        <ul class="completeList" id="completeList">
         </ul>
       </div>
 
@@ -28,6 +30,7 @@
         </div>
         <button type="button" name="button" id="btnDelCompleteList"><span id="completeItemsNum"></span> Clear completed</button>
       </div>
+
     </div>
 
     <script type="text/javascript" src="../dist/bundle.js"></script>
