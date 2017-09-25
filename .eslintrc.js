@@ -11,5 +11,8 @@ module.exports = {
     "globals": {
         "tui": true,
         "fixture": true
-    }
+    },
+    "extends": [
+      "plugin:jasmine-jquery/recommended"
+    ]
 };

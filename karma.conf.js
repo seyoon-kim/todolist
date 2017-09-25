@@ -13,8 +13,7 @@ var webdriverConfig = {
  * @param {Object} defaultConfig - base configuration
  * @param {'ne'|null|undefined} server - ne: team selenium grid, null or undefined: local machine
  */
-
- function setConfig(defaultConfig, server) {
+function setConfig(defaultConfig, server) {
     if (server === 'ne') {
         defaultConfig.customLaunchers = {
             'IE8': {
@@ -97,16 +96,15 @@ var webdriverConfig = {
         };
     } else {
         defaultConfig.browsers = [
-            'ChromeHeadless'
+            'Firefox'// 'ChromeHeadless'
         ];
     }
 }
 
-
 module.exports = function(config) {
-    config.set({
+    var defaultConfig = {
 
-    // base path that will be used to resolve all patterns (eg. files, exclude)
+        // base path that will be used to resolve all patterns (eg. files, exclude)
         basePath: '',
 
         // frameworks to use
@@ -115,9 +113,10 @@ module.exports = function(config) {
 
         // list of files / patterns to load in the browser
         files: [
-            // './src/todoList.js',
-            './test/*.spec.js'
-            // './util/Domutil.js'
+            { pattern: 'test/fixtures/*.html', included: false, served: true },
+            './test/*.spec.js',
+            './node_modules/jquery/dist/jquery.js',
+            './node_modules/jasmine-jquery/lib/jasmine-jquery.js'
         ],
 
         // list of files to exclude
@@ -152,10 +151,6 @@ module.exports = function(config) {
         // enable / disable watching file and executing tests whenever any file changes
         autoWatch: true,
 
-        // start these browsers
-        // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['Chrome'],
-
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
         singleRun: false,
@@ -163,7 +158,9 @@ module.exports = function(config) {
         // Concurrency level
         // how many browser should be started simultaneous
         concurrency: Infinity
-    });
+    };
 
+    /* eslint-disable */
     setConfig(defaultConfig, process.env.KARMA_SERVER);
+    config.set(defaultConfig);
 };

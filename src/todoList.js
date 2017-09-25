@@ -2,8 +2,6 @@ var Domclass = require('../util/Domclass');
 var Eventutil = require('../util/Eventutil');
 var snippet = require('tui-code-snippet');
 
-//함수 표현식 -> 함수 선언문으로 바꾸기 eslint에서 jsdoc검사때문에
-
 module.exports = (function() {
     var todoObjects = []; // 모든 todoData
     var completeTodoObjects = []; // isChecked가 true인 값
@@ -37,7 +35,7 @@ module.exports = (function() {
      * 객체가 등록된 시간을 기준으로 내림차순으로 정렬 하는 함수
      * @param {array} arr 는 정렬하고 싶은 배열
      */
-    var _sortRegDateOfTodoObject = function(arr) {
+    function _sortRegDateOfTodoObject(arr) {
         arr.sort(function(a, b) {
             if (a.regDate < b.regDate) {
                 return 1;
@@ -47,14 +45,14 @@ module.exports = (function() {
 
             return 0;
         });
-    };
+    }
 
     /**
      * 인자로 받은 데이터 정보를 todoObjects에 담고, isChecked = false인것은 incompleteTodoObjects,
      * isChecked = true인것은 completeTodoObjects 배열에 담은 뒤 오름차순 정렬
      * @param {array} todoData 는 todo 데이터 정보
      */
-    var _loadTodoData = function(todoData) {
+    function _loadTodoData(todoData) {
         todoObjects = todoData;
 
         completeTodoObjects = snippet.filter(todoObjects, function(value) {
@@ -68,9 +66,12 @@ module.exports = (function() {
         });
 
         _sortRegDateOfTodoObject(incompleteTodoObjects);
-    };
+    }
 
-    var _renderCompleteTodoList = function() {
+    /**
+     * completeList를 렌더링해주는 함수
+     */
+    function _renderCompleteTodoList() {
         var htmlLi = '';
         var todoId, todoTitle;
 
@@ -81,9 +82,12 @@ module.exports = (function() {
         });
 
         COMPLETE_LIST_ELEMENT.innerHTML = htmlLi;
-    };
+    }
 
-    var _renderIncompleteTodoList = function() {
+    /**
+     * incompleteList를 렌더링해주는 함수
+     */
+    function _renderIncompleteTodoList() {
         var htmlLi = '';
         var todoId, todoTitle;
 
@@ -94,28 +98,37 @@ module.exports = (function() {
         });
 
         INCOMPLETE_LIST_ELEMENT.innerHTML = htmlLi;
-    };
+    }
 
-    var _renderTodoList = function() {
+    /**
+     * _renderCompleteTodoList, _renderIncompleteTodoList 함수 호출
+     */
+    function _renderTodoList() {
         _renderCompleteTodoList();
         _renderIncompleteTodoList();
-    };
+    }
 
-    var _renderInfoList = function() {
+    /**
+     * infoList를 렌더링 해주는 함수
+     */
+    function _renderInfoList() {
         LEFT_ITEM_NUM_ELEMENT.innerText = incompleteTodoObjects.length;
         COMPLETE_ITEMS_NUM_ELEMENT.innerText = completeTodoObjects.length;
-    };
+    }
 
-    var _renderView = function() {
+    /**
+     * _renderTodoList, _renderInfoList 함수 호출
+     */
+    function _renderView() {
         _renderTodoList();
         _renderInfoList();
-    };
+    }
 
     /**
      * 텍스트박스에서 받은 값을 가지고 새로운 todo 객체를 만들고 todoObjects에 넣어 둔뒤 재 렌더링
      * @param {object} target 는 inputTxt 객체
      */
-    var _addTodoObject = function(target) {
+    function _addTodoObject(target) {
         var objTodo = {
             id: 'todo' + snippet.stamp({}),
             title: target.value,
@@ -127,13 +140,16 @@ module.exports = (function() {
 
         _loadTodoData(todoObjects);
         _renderView();
-    };
+    }
 
-    var _keypressEvent = function(e) {
+    /**
+     * keypress이벤트가 발생하면 이벤트 객체를 받아서 targetId값에 따라 해당 함수 호출
+     * @param {object} event 는 이벤트 객체
+     */
+    function _keypressEvent(event) {
         var target, key, targetId;
-        e = e || window.event;
-        target = e.target || e.srcElement;
-        key = e.keyCode;
+        target = event.target || event.srcElement;
+        key = event.keyCode;
         targetId = target.getAttribute('id');
 
         if (!target.value) {
@@ -143,14 +159,14 @@ module.exports = (function() {
         if (key === KEY_ENTER && targetId === 'todoInputTxt') {
             _addTodoObject(target);
         }
-    };
+    }
 
     /**
      * 해당 todo의 checkbox를 클릭하면 isChecked의 값을 변경한 뒤 재 렌더링
      * @param {string} idTodo 는 todo의 id값
      * @param {object} isCheckedTarget 는 클릭된 checkbox의 isChecked값
      */
-    var _toggleTodo = function(idTodo, isCheckedTarget) {
+    function _toggleTodo(idTodo, isCheckedTarget) {
         _forEach(todoObjects, function(index, value) {
             if (value.id === idTodo) {
                 value.isChecked = (!!isCheckedTarget);
@@ -158,12 +174,12 @@ module.exports = (function() {
         });
         _loadTodoData(todoObjects);
         _renderView();
-    };
+    }
 
     /**
      * 완료된 모든 todo항목들을 제거 하는 함수
      */
-    var _removeComplteList = function() {
+    function _removeComplteList() {
         if (completeTodoObjects.length === 0) {
             return;
         }
@@ -172,18 +188,21 @@ module.exports = (function() {
             return (value.isChecked === false);
         });
         _renderView();
-    };
+    }
 
-    var _removeClassHideOfList = function() {
+    /**
+     * completeList, incompleteList 엘리멘트의 hide 클래스 제거
+     */
+    function _removeClassHideOfList() {
         Domclass.removeClass(COMPLETE_LIST_ELEMENT, 'hide');
         Domclass.removeClass(INCOMPLETE_LIST_ELEMENT, 'hide');
-    };
+    }
 
     /**
      * filter Button 중에 하나를 클릭하면 해당 동작에 맞게 hide클래스를 추가하여 List의 속성값 display:none으로 변경
      * @param {object} target 는 filter Button 객체 중 하나
      */
-    var _clickFilterBtn = function(target) {
+    function _clickFilterBtn(target) {
         if (target.id === 'btnAllList') {
             _removeClassHideOfList();
         } else if (target.id === 'btnActiveList') {
@@ -193,13 +212,18 @@ module.exports = (function() {
             _removeClassHideOfList();
             Domclass.addClass(INCOMPLETE_LIST_ELEMENT, 'hide');
         }
-    };
+    }
 
-    var _clickEvent = function(event) {
-        var event = event || window.event;
-        var target = event.target || event.srcElement;
-        var todoElement = target.parentElement;
+    /**
+     * click 이벤트가 발생하면 이벤트 객체를 받아서 target 값에 따라 해당 함수 호출
+     * @param {object} event 는 이벤트 객체
+     */
+    function _clickEvent(event) {
+        var target;
+        var todoElement;
         var todoId;
+        target = event.target || event.srcElement;
+        todoElement = target.parentElement;
 
         if (target.type === 'checkbox' && Domclass.hasClass(todoElement, 'todo')) {
             todoId = todoElement.getAttribute('data-id');
@@ -209,22 +233,29 @@ module.exports = (function() {
         } else if (target.id === 'btnAllList' || target.id === 'btnActiveList' || target.id === 'btnCompleteList') {
             _clickFilterBtn(target);
         }
-    };
+    }
 
-    var _bindEvent = function() {
+    /**
+     * keypress, click 이벤트 바인딩
+     */
+    function _bindEvent() {
         Eventutil.addHandler(TODO_LIST_WRAP_ELEMENT, 'keypress', _keypressEvent);
         Eventutil.addHandler(TODO_LIST_WRAP_ELEMENT, 'click', _clickEvent);
-    };
+    }
 
-    var init = function(todoData) {
+    /**
+     * 각종 함수 초기화
+     * @param {object} todoData todoList에 대한 데이터 정보
+     */
+    function init(todoData) {
         _initConstant();
         _loadTodoData(todoData);
         _renderView();
         _bindEvent();
-    };
+    }
 
     /**
-     * @returns {Object}
+     * @returns {Object} 현재 가지고 있는 todo 객체 반환
      */
     function getTodoObjects() {
         return todoObjects;
