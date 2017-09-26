@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>TodoList</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+
+    <h1>TodoList 구현</h1>
+    <div class="todoListWrap" id="todoListWrap">
+
+      <div class="inputArea">
+        <input type="text" class="inputTxt" id="todoInputTxt" placeholder="할일을 입력하세요."/>
+      </div>
+
+      <div class="listArea">
+        <ul class="incompleteList" id="incompleteList">
+        </ul>
+        <ul class="completeList" id="completeList">
+        </ul>
+      </div>
+
+      <div class="infoArea">
+        <p class="leftItems"> <span id="leftItemsNum"></span> items left </p>
+        <div class="filterArea">
+          <button type="button" name="button" id="btnAllList">All</button>
+          <button type="button" name="button" id="btnActiveList">Active</button>
+          <button type="button" name="button" id="btnCompleteList">Completed</button>
+        </div>
+        <button type="button" name="button" id="btnDelCompleteList"><span id="completeItemsNum"></span> Clear completed</button>
+      </div>
+
+    </div>
+
+    <script type="text/javascript" src="../dist/bundle.js"></script>
+  </body>
+</html>
